@@ -20,6 +20,7 @@ curl https://raw.githubusercontent.com/ddeimling/arch-install/master/69-hdparm.r
 echo Arch-Desktop > /etc/hostname
 
 # Configure & generate locale
+echo LANG=de_DEUTF-8 > /etc/locale.conf
 echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen
 echo "de_DE ISO-8859-1" >> /etc/locale.gen
 echo "de_DE@euro ISO-8859-15" >> /etc/locale.gen
@@ -53,15 +54,15 @@ pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils
 curl https://raw.githubusercontent.com/ddeimling/arch-install/master/20-keyboard.conf > /etc/X11/xorg.conf.d/20-keyboard.conf
 
 # Install & configure desktop
-pacman --noconfirm --needed -S lightdm lightdm-gtk-greeter cinnamon awesome alsa-utils
+pacman --noconfirm --needed -S lightdm lightdm-gtk-greeter cinnamon awesome
 sed -i 's|#greeter-session=example-gtk-gnome|greeter-session=lightdm-gtk-greeter|g' /etc/lightdm/lightdm.conf
 systemctl enable lightdm
 
 # Install some tools
-pacman --noconfirm --needed -S bash-completion nano neovim terminator ttf-dejavu
+pacman --noconfirm --needed -S bash-completion nano neovim terminator ttf-dejavu thunderbird firefox
 
 # Set the root default password
 echo -e 'root\nroot' | passwd root
 # Add user
-sudo useradd -m -G wheel,audio,video,games,power -s /bin/bash daniel
+useradd -m -G wheel,audio,video,games,power -s /bin/bash daniel
 echo -e 'daniel\ndaniel' | passwd daniel
