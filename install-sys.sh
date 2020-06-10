@@ -30,7 +30,7 @@ genfstab -Up /mnt > /mnt/etc/fstab
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
 grep -E -A 1 ".*Germany.*$" /etc/pacman.d/mirrorlist.bak | sed '/--/d' > /etc/pacman.d/mirrorlist
-pacman -Syu
+pacman --noconfirm -Syu
 
 # Install base system
 pacstrap /mnt base base-devel linux linux-firmware intel-ucode
