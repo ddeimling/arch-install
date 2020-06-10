@@ -17,7 +17,8 @@ echo FONT=lat9w-16 >> /etc/vconsole.conf
 # Set the timezone
 ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# Activate sudo group 'wheel' in /etc/sudoers
+# Install & ctivate sudo group 'wheel' in /etc/sudoers
+pacman --noconfirm --needed sudo
 sed -i 's|# %wheel All=(ALL) ALL|%wheel All=(ALL) ALL|g' /etc/sudoers
 
 # Install & activate services
@@ -35,6 +36,7 @@ hwclock --systohc
 
 # Install & configure X
 pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils
+cp 20-keyboard.conf /etc/X11/xorg.conf.d
 
 # Install & configure desktop
 pacman --noconfirm --needed lightdm lightdm-gtk-greeter cinnamon awesome
@@ -63,4 +65,4 @@ gpasswd -a daniel power
 gpasswd -a daniel games
 
 # Install some essential tools
-pacman --noconfirm --needed thunderbird firefox alsa-utils libreoffice gimp vlc
+pacman --noconfirm --needed thunderbird firefox alsa-utils libreoffice gimp vlc bash-completion nano neovim terminator
