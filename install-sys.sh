@@ -35,10 +35,10 @@ pacman -Sy
 pacstrap /mnt base base-devel linux linux-firmware intel-ucode
 
 # Continue with install-chroot.sh
-arch-chroot /mnt bash install-chroot.sh
+#arch-chroot /mnt bash install-chroot.sh
 
-swapoff /dev/sda2
-umount /dev/sda1
-umount /dev/sda4
-umount /dev/sda3
-reboot
+#swapoff /dev/sda2
+#umount /dev/sda1
+#umount /dev/sda4
+#umount /dev/sda3
+#reboot
