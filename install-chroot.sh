@@ -20,7 +20,7 @@ curl https://raw.githubusercontent.com/ddeimling/arch-install/master/69-hdparm.r
 echo Arch-Desktop > /etc/hostname
 
 # Configure & generate locale
-echo LANG=de_DEUTF-8 > /etc/locale.conf
+echo LANG=de_DE.UTF-8 > /etc/locale.conf
 echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen
 echo "de_DE ISO-8859-1" >> /etc/locale.gen
 echo "de_DE@euro ISO-8859-15" >> /etc/locale.gen
