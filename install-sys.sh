@@ -42,7 +42,7 @@ pacstrap /mnt base base-devel linux linux-firmware intel-ucode
 
 # Continue in chroot
 curl https://raw.githubusercontent.com/ddeimling/arch-install/master/install-chroot.sh > /mnt/install-chroot.sh
-arch-chroot /mnt install-chroot.sh
+arch-chroot /mnt bash install-chroot.sh
 
 swapoff /dev/sda2
 umount /dev/sda1
