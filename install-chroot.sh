@@ -1,4 +1,21 @@
 #!/bin/bash
+
+#Load and add blacklist.conf to file hooks
+curl -O https://raw.githubusercontent.com/ddeimling/arch-install/master/blacklist.conf -o /etc/modprobe.d/blacklist.conf
+sed -i 's|FILES=()|FILES=(/etc/modprobe.d/blacklist.conf)|g' /etc/mkinitcpio.conf
+
+# Generate initramfs
+mkinitcpio -p linux
+
+# Install boot
+pacman --noconfirm --needed -S grub efibootmgr
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch-Grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Install and configure hdparm
+pacman -S --noconfirm --need hdparm
+curl -O https://raw.githubusercontent.com/ddeimling/arch-install/master/69-hdparm.rules -o /etc/udev/rules.d/69-hdparm.rules
+
 # Set hostname
 echo Arch-Desktop > /etc/hostname
 
@@ -17,52 +34,34 @@ echo FONT=lat9w-16 >> /etc/vconsole.conf
 # Set the timezone
 ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# Install & ctivate sudo group 'wheel' in /etc/sudoers
-pacman --noconfirm --needed sudo
+# Install & activate sudo group 'wheel' in /etc/sudoers
+pacman --noconfirm --needed -S sudo
 sed -i 's|# %wheel All=(ALL) ALL|%wheel All=(ALL) ALL|g' /etc/sudoers
 
 # Install & activate services
-pacman --noconfirm --needed acpid dbus avahi cups cronie networkmanager
+pacman --noconfirm --needed -S acpid dbus avahi cups cronie networkmanager
 systemctl enable acpid
 systemctl enable avahi-daemon
 systemctl enable org.cups.cupsd.service
 systemctl enable NetworkManager.service
-systenctl enable --now cronie
-systemctl enable --now fstrim.timer
-systemctl enable --now systemd-timesyncd.service
-
-# Set hardware clock from system clock
-hwclock --systohc
+systenctl enable cronie
+systemctl enable fstrim.timer
+systemctl enable systemd-timesyncd.service
 
 # Install & configure X
 pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils
-cp 20-keyboard.conf /etc/X11/xorg.conf.d
+curl -O https://raw.githubusercontent.com/ddeimling/arch-install/master/20-keyboard.conf -o /etc/X11/xorg.conf.d/20-keyboard.conf
 
 # Install & configure desktop
-pacman --noconfirm --needed lightdm lightdm-gtk-greeter cinnamon awesome
-sed -i 's|greeter-session=lightdm-yourgreeter-greeter|greeter-session=lightdm-gtk-greeter|g' /etc/mkinitcpio.conf
+pacman --noconfirm --needed -S lightdm lightdm-gtk-greeter cinnamon awesome alsa-utils
+sed -i 's|greeter-session=example-gtk-gnome|greeter-session=lightdm-gtk-greeter|g' /etc/lightdm/lightdm.conf
 systemctl enable lightdm
 
-#Deactivation pc speaker ("beeping" when using shell)
-cp nobeep.conf /etc/modprobe.d
-sed -i 's|FILES=()|FILES=(/etc/modprobe.d/nobeep.conf)|g' /etc/mkinitcpio.conf
-
-# Generate initramfs
-mkinitcpio -p linux
-
-# Install boot
-pacman --noconfirm --needed -S grub efibootmgr
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch-Grub
-grub-mkconfig -o /boot/grub/grub.cfg
-
-# Install some essential tools
-pacman --noconfirm --needed thunderbird firefox alsa-utils libreoffice gimp vlc bash-completion nano neovim terminator
+# Install some tools
+pacman --noconfirm --needed -S bash-completion nano neovim terminator ttf-dejavu
 
 # Set the root default password
-chpasswd root:root
-useradd -m -g users -s /bin/bash daniel
-gpasswd -a daniel wheel
-gpasswd -a daniel audio
-gpasswd -a daniel video
-gpasswd -a daniel power
-gpasswd -a daniel games
+echo -e 'root\nroot' | passwd root
+# Add user
+sudo useradd -m -G wheel,audio,video,games,power -s /bin/bash daniel
+echo -e 'daniel\ndaniel | passwd daniel
