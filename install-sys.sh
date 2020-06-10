@@ -35,7 +35,6 @@ grep -E -A 1 ".*Germany.*$" /etc/pacman.d/mirrorlist.bak | sed '/--/d' > /etc/pa
 pacman-key --init
 pacman-key --populate
 pacman-key --refresh-keys
-pacman --noconfirm -Sy archlinux-keyring
 pacman --noconfirm -Syu
 
 # Install base system
