@@ -4,10 +4,10 @@
 
 # Create partitions
 sgdisk /dev/sda --zap-all
-sgdisk /dev/sda --new=1:0:512M --typecode:0:ef00
-sgdisk /dev/sda --new=2:0:20G --typecode:0:8200
-sgdisk /dev/sda --new:3:0:30G --typecode:0:8300
-sgdisk /dev/sda --new:4:0:0 --typecode:0:8300
+sgdisk /dev/sda --new=1:0:512M --typecode:1:ef00
+sgdisk /dev/sda --new=2:0:20G --typecode:2:8200
+sgdisk /dev/sda --new:3:0:30G --typecode:3:8300
+sgdisk /dev/sda --new:4:0:0 --typecode:4:8300
 
 # Create filesystems
 mkfs.fat -F 32 /dev/sda1
