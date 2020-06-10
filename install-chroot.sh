@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Load and add blacklist.conf to file hooks
-curl -O https://raw.githubusercontent.com/ddeimling/arch-install/master/blacklist.conf -o /etc/modprobe.d/blacklist.conf
+curl https://raw.githubusercontent.com/ddeimling/arch-install/master/blacklist.conf > /etc/modprobe.d/blacklist.conf
 sed -i 's|FILES=()|FILES=(/etc/modprobe.d/blacklist.conf)|g' /etc/mkinitcpio.conf
 
 # Generate initramfs
@@ -14,7 +14,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 # Install and configure hdparm
 pacman -S --noconfirm --need hdparm
-curl -O https://raw.githubusercontent.com/ddeimling/arch-install/master/69-hdparm.rules -o /etc/udev/rules.d/69-hdparm.rules
+curl https://raw.githubusercontent.com/ddeimling/arch-install/master/69-hdparm.rules > /etc/udev/rules.d/69-hdparm.rules
 
 # Set hostname
 echo Arch-Desktop > /etc/hostname
@@ -50,11 +50,11 @@ systemctl enable systemd-timesyncd.service
 
 # Install & configure X
 pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils
-curl -O https://raw.githubusercontent.com/ddeimling/arch-install/master/20-keyboard.conf -o /etc/X11/xorg.conf.d/20-keyboard.conf
+curl https://raw.githubusercontent.com/ddeimling/arch-install/master/20-keyboard.conf > /etc/X11/xorg.conf.d/20-keyboard.conf
 
 # Install & configure desktop
 pacman --noconfirm --needed -S lightdm lightdm-gtk-greeter cinnamon awesome alsa-utils
-sed -i 's|greeter-session=example-gtk-gnome|greeter-session=lightdm-gtk-greeter|g' /etc/lightdm/lightdm.conf
+sed -i 's|#greeter-session=example-gtk-gnome|greeter-session=lightdm-gtk-greeter|g' /etc/lightdm/lightdm.conf
 systemctl enable lightdm
 
 # Install some tools
@@ -64,4 +64,4 @@ pacman --noconfirm --needed -S bash-completion nano neovim terminator ttf-dejavu
 echo -e 'root\nroot' | passwd root
 # Add user
 sudo useradd -m -G wheel,audio,video,games,power -s /bin/bash daniel
-echo -e 'daniel\ndaniel | passwd daniel
+echo -e 'daniel\ndaniel' | passwd daniel
