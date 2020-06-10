@@ -55,6 +55,9 @@ pacman --noconfirm --needed -S grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch-Grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
+# Install some essential tools
+pacman --noconfirm --needed thunderbird firefox alsa-utils libreoffice gimp vlc bash-completion nano neovim terminator
+
 # Set the root default password
 chpasswd root:root
 useradd -m -g users -s /bin/bash daniel
@@ -63,6 +66,3 @@ gpasswd -a daniel audio
 gpasswd -a daniel video
 gpasswd -a daniel power
 gpasswd -a daniel games
-
-# Install some essential tools
-pacman --noconfirm --needed thunderbird firefox alsa-utils libreoffice gimp vlc bash-completion nano neovim terminator
