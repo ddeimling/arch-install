@@ -39,8 +39,8 @@ arch-chroot /mnt bash install-chroot.sh
 
 
 ## Cleanup & have fun :D
-swapoff /dev/sda2
-umount /dev/sda1
-umount /dev/sda4
-umount /dev/sda3
-reboot
+# swapoff /dev/sda2
+# umount /dev/sda1
+# umount /dev/sda4
+# umount /dev/sda3
+# reboot
