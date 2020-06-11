@@ -76,9 +76,9 @@ grub-mkconfig -o /boot/grub/grub.cfg
 useradd -m -G wheel,log,network,audio,video,games,power -s /bin/bash daniel
 echo -e 'daniel\ndaniel' | passwd daniel
 
-mkdir -p /home/daniel/documents
-mkdir -p /home/daniel/downloads
-mkdir -p /home/daniel/workspace
-mkdir -p /home/daniel/pictures
-mkdir -p /home/daniel/music
-mkdir -p /home/daniel/videos
+# mkdir -p /home/daniel/documents
+# mkdir -p /home/daniel/downloads
+# mkdir -p /home/daniel/workspace
+# mkdir -p /home/daniel/pictures
+# mkdir -p /home/daniel/music
+# mkdir -p /home/daniel/videos
