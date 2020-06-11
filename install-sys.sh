@@ -23,12 +23,8 @@ mount /dev/sda1 /mnt/boot
 mount /dev/sda4 /mnt/home
 swapon /dev/sda2
 
-# Generate fstab with IDs
-genfstab -Up /mnt > /mnt/etc/fstab
-
 # Modify mirrorlist
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
 grep -E -A 1 ".*Germany.*$" /etc/pacman.d/mirrorlist.bak | sed '/--/d' > /etc/pacman.d/mirrorlist
 
 # Check updates
@@ -39,6 +35,9 @@ pacman --noconfirm -Syu
 
 # Install base system
 pacstrap /mnt base base-devel linux linux-firmware intel-ucode
+
+# Generate fstab with IDs
+genfstab -Up /mnt > /mnt/etc/fstab
 
 # Continue in chroot
 curl https://raw.githubusercontent.com/ddeimling/arch-install/master/install-chroot.sh > /mnt/install-chroot.sh
