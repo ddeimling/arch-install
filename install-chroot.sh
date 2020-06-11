@@ -3,9 +3,9 @@
 ## Initializing
 
 # Check updates
-pacman-key --init
-pacman-key --populate
-pacman-key --refresh-keys
+#pacman-key --init
+#pacman-key --populate
+#pacman-key --refresh-keys
 pacman --noconfirm -Syu
 
 
@@ -15,7 +15,7 @@ pacman --noconfirm -Syu
 pacman --noconfirm --needed -S hdparm sudo acpid dbus avahi cups cronie networkmanager
 
 # Desktop, graphics & login manager
-pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils sddm sddm-kcm plasma awesome ttf-dejavu
+pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils sddm cinnamon awesome ttf-dejavu
 
 # Other (e. g. dependencies for themin sddm)
 pacman --noconfirm --needed -S qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
@@ -37,8 +37,8 @@ systemctl enable systemd-timesyncd.service
 systemctl enable sddm
 
 # Install sddm theme 'sugar-candy'
-mkdir -p /usr/share/sddm/theme/sugar-candy
-git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/theme/sugar-candy
+mkdir -p /usr/share/sddm/themes/sugar-candy
+git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/themes/sugar-candy
 
 
 ## Setup system environment
@@ -59,7 +59,7 @@ cp -r /tmp/arch-install/salt/* /
 rm -rf /tmp/arch-install
 
 
-## Finishing ###
+### Finishing ###
 
 # Generate locale
 locale-gen
@@ -71,3 +71,14 @@ mkinitcpio -p linux
 pacman --noconfirm --needed -S grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch-Grub
 grub-mkconfig -o /boot/grub/grub.cfg
+
+# Add user
+useradd -m -G wheel,log,network,audio,video,games,power -s /bin/bash daniel
+echo -e 'daniel\ndaniel' | passwd daniel
+
+mkdir -p /home/daniel/documents
+mkdir -p /home/daniel/downloads
+mkdir -p /home/daniel/workspace
+mkdir -p /home/daniel/pictures
+mkdir -p /home/daniel/music
+mkdir -p /home/daniel/videos
