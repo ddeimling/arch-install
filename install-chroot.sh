@@ -1,30 +1,30 @@
 #!/bin/bash
 
-# Set hostname
-echo Arch-Desktop > /etc/hostname
+## Initializing
 
-# Set the timezone
-ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+# Check updates
+pacman-key --init
+pacman-key --populate
+pacman-key --refresh-keys
+pacman --noconfirm -Syu
 
-# Set the root default password
-echo -e 'root\nroot' | passwd root
 
-# Generate locale
-locale-gen
-
-# Install tools & software
+## Install tools & software
 
 # System tools
 pacman --noconfirm --needed -S hdparm sudo acpid dbus avahi cups cronie networkmanager
 
 # Desktop, graphics & login manager
-pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils sddm sddm-kcm plasma awesome
+pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils sddm sddm-kcm plasma awesome ttf-dejavu
 
 # Other (e. g. dependencies for themin sddm)
 pacman --noconfirm --needed -S qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
 
 # Tooling & Applications
-pacman --noconfirm --needed -S bash-completion nano neovim terminator ttf-dejavu thunderbird firefox
+pacman --noconfirm --needed -S bash-completion nano neovim terminator thunderbird firefox git nodejs
+
+
+## Configure system
 
 # Enable services
 systemctl enable acpid
@@ -40,10 +40,30 @@ systemctl enable sddm
 mkdir -p /usr/share/sddm/theme/sugar-candy
 git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/theme/sugar-candy
 
+
+## Setup system environment
+
+# Set hostname
+echo Arch-Desktop > /etc/hostname
+
+# Set the timezone
+ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+
+# Set the root default password ( CHANGE ROOT PASSWORD AFTER SYSTEM SETUP HAS FINISHED ! ! ! )
+echo -e 'root\nroot' | passwd root
+
 # Copy the salt
- 
+
+git clone https://github.com/ddeimling/arch-install /tmp/arch-install
+cp -r /tmp/arch-install/salt/* /
+rm -rf /tmp/arch-install
+
 
 ## Finishing ###
+
+# Generate locale
+locale-gen
+
 # Generate initramfs
 mkinitcpio -p linux
 

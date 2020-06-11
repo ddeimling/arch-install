@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Arch base system installation
+##Arch base system setup
 
 # Create partitions
 sgdisk /dev/sda --zap-all
@@ -27,12 +27,6 @@ swapon /dev/sda2
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 grep -E -A 1 ".*Germany.*$" /etc/pacman.d/mirrorlist.bak | sed '/--/d' > /etc/pacman.d/mirrorlist
 
-# Check updates
-pacman-key --init
-pacman-key --populate
-pacman-key --refresh-keys
-pacman --noconfirm -Syu
-
 # Install base system
 pacstrap /mnt base base-devel linux linux-firmware intel-ucode
 
@@ -43,6 +37,8 @@ genfstab -Up /mnt > /mnt/etc/fstab
 curl https://raw.githubusercontent.com/ddeimling/arch-install/master/install-chroot.sh > /mnt/install-chroot.sh
 arch-chroot /mnt bash install-chroot.sh
 
+
+## Cleanup & have fun :D
 swapoff /dev/sda2
 umount /dev/sda1
 umount /dev/sda4
