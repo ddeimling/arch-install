@@ -3,47 +3,30 @@
 # Set hostname
 echo Arch-Desktop > /etc/hostname
 
-# Configure & generate locale
-echo LANG=de_DE.UTF-8 > /etc/locale.conf
-echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen
-echo "de_DE ISO-8859-1" >> /etc/locale.gen
-echo "de_DE@euro ISO-8859-15" >> /etc/locale.gen
-echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-echo "en_US ISO-8859-1" >> /etc/locale.gen
-locale-gen
-
-# Set keyboard layout & font
-echo KEYMAP=de-latin1 > /etc/vconsole.conf
-echo FONT=lat9w-16 >> /etc/vconsole.conf
-
 # Set the timezone
 ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
-
-#Load and add blacklist.conf to file hooks
-curl https://raw.githubusercontent.com/ddeimling/arch-install/master/blacklist.conf > /etc/modprobe.d/blacklist.conf
-sed -i 's|FILES=()|FILES=(/etc/modprobe.d/blacklist.conf)|g' /etc/mkinitcpio.conf
-
-# Generate initramfs
-mkinitcpio -p linux
 
 # Set the root default password
 echo -e 'root\nroot' | passwd root
 
-# Install boot
-pacman --noconfirm --needed -S grub efibootmgr
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch-Grub
-grub-mkconfig -o /boot/grub/grub.cfg
+# Generate locale
+locale-gen
 
-# Install and configure hdparm
-pacman -S --noconfirm --need hdparm
-curl https://raw.githubusercontent.com/ddeimling/arch-install/master/69-hdparm.rules > /etc/udev/rules.d/69-hdparm.rules
+# Install tools & software
 
-# Install & activate sudo group 'wheel' in /etc/sudoers
-pacman --noconfirm --needed -S sudo
-sed -i 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|g' /etc/sudoers
+# System tools
+pacman --noconfirm --needed -S hdparm sudo acpid dbus avahi cups cronie networkmanager
 
-# Install & activate services
-pacman --noconfirm --needed -S acpid dbus avahi cups cronie networkmanager
+# Desktop, graphics & login manager
+pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils sddm sddm-kcm plasma awesome
+
+# Other (e. g. dependencies for themin sddm)
+pacman --noconfirm --needed -S qt5-graphicaleffects qt5-quickcontrols2 qt5-svg
+
+# Tooling & Applications
+pacman --noconfirm --needed -S bash-completion nano neovim terminator ttf-dejavu thunderbird firefox
+
+# Enable services
 systemctl enable acpid
 systemctl enable avahi-daemon
 systemctl enable org.cups.cupsd.service
@@ -51,14 +34,20 @@ systemctl enable NetworkManager.service
 systenctl enable cronie
 systemctl enable fstrim.timer
 systemctl enable systemd-timesyncd.service
-
-# Install & configure X
-pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils
-curl https://raw.githubusercontent.com/ddeimling/arch-install/master/20-keyboard.conf > /etc/X11/xorg.conf.d/20-keyboard.conf
-
-# Install & configure desktop
-pacman --noconfirm --needed -S sddm sddm-kcm plasma awesome
 systemctl enable sddm
 
-# Install some tools
-pacman --noconfirm --needed -S bash-completion nano neovim terminator ttf-dejavu thunderbird firefoxs
+# Install sddm theme 'sugar-candy'
+mkdir -p /usr/share/sddm/theme/sugar-candy
+git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/theme/sugar-candy
+
+# Copy the salt
+ 
+
+## Finishing ###
+# Generate initramfs
+mkinitcpio -p linux
+
+# Install boot
+pacman --noconfirm --needed -S grub efibootmgr
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch-Grub
+grub-mkconfig -o /boot/grub/grub.cfg
