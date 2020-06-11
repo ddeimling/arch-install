@@ -40,7 +40,7 @@ curl https://raw.githubusercontent.com/ddeimling/arch-install/master/69-hdparm.r
 
 # Install & activate sudo group 'wheel' in /etc/sudoers
 pacman --noconfirm --needed -S sudo
-curl https://raw.githubusercontent.com/ddeimling/arch-install/master/sudoers > /etc/sudoers
+sed -i 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|g' /etc/sudoers
 
 # Install & activate services
 pacman --noconfirm --needed -S acpid dbus avahi cups cronie networkmanager
