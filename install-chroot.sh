@@ -75,10 +75,11 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # Add user
 useradd -m -G wheel,log,network,audio,video,games,power -s /bin/bash daniel
 echo -e 'daniel\ndaniel' | passwd daniel
+sudo -Hu daniel dbus-launch gsettings set org.cinnamon.desktop.background picture-uri  "file:///usr/local/share/img/arch.jpg"
 
-# mkdir -p /home/daniel/documents
-# mkdir -p /home/daniel/downloads
-# mkdir -p /home/daniel/workspace
-# mkdir -p /home/daniel/pictures
-# mkdir -p /home/daniel/music
-# mkdir -p /home/daniel/videos
+mkdir -p /home/daniel/documents
+mkdir -p /home/daniel/downloads
+mkdir -p /home/daniel/workspace
+mkdir -p /home/daniel/pictures
+mkdir -p /home/daniel/music
+mkdir -p /home/daniel/videos
