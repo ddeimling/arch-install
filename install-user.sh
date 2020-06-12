@@ -1,4 +1,6 @@
 #sudo -Hu daniel dbus-launch gsettings set org.cinnamon.desktop.background picture-uri  "file:///usr/local/share/img/arch.jpg"
+echo -e "daniel\ndaniel" | passwd daniel
+
 gsettings set org.cinnamon.desktop.background picture-uri  "file:///usr/local/share/img/arch.jpg"
 
 mkdir -p /home/$(whoami)/documents

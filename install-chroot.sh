@@ -14,7 +14,7 @@ pacman --noconfirm -Syu
 ## Install tools & software
 
 # System tools
-pacman --noconfirm --needed -S hdparm sudo acpid dbus avahi cups cronie networkmanager
+pacman --noconfirm --needed -S hdparm sudo acpid dbus avahi cups cronie networkmanager git
 
 # Desktop, graphics & login manager
 pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils sddm cinnamon awesome ttf-dejavu
@@ -75,13 +75,15 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch-Grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
 # Add administrator for further installation, e. g. for yay (because of makepkg & root)
-useradd -m -G wheel,log,network,audio,video,games,power -s /bin/bash $ADMINISTRATOR_NAME
+useradd -m $ADMINISTRATOR_NAME
 echo -e "${ADMINISTRATOR_DEFAULT_PASSWORD}\n${ADMINISTRATOR_DEFAULT_PASSWORD}" | passwd $ADMINISTRATOR_NAME
+echo "%$ADMINISTRATOR_NAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 sudo -Hu $ADMINISTRATOR_NAME git clone https://aur.archlinux.org/yay.git /home/$ADMINISTRATOR_NAME/yay
 cd /home/$ADMINISTRATOR_NAME/yay
 sudo -Hu $ADMINISTRATOR_NAME makepkg -si --noconfirm
 
+sed -i "/%$ADMINISTRATOR_NAME ALL=(ALL) NOPASSWD: ALL/d" /etc/sudoers
 userdel -r $ADMINISTRATOR_NAME
 
 # TODO: Install yay then with yay install visual-studio-code-bin, spotify
@@ -90,14 +92,4 @@ userdel -r $ADMINISTRATOR_NAME
 
 
 useradd -m -G wheel,log,network,audio,video,games,power -s /bin/bash daniel
-echo -e "daniel\ndaniel" | passwd daniel
-
 sudo -Hu daniel dbus-launch gsettings set org.cinnamon.desktop.background picture-uri  "file:///usr/local/share/img/arch.jpg"
-
-su -Hu daniel mkdir -p /home/$(whoami)/documents
-su -Hu daniel mkdir -p /home/$(whoami)/downloads
-su -Hu daniel mkdir -p /home/$(whoami)/workspace
-su -Hu daniel mkdir -p /home/$(whoami)/pictures
-su -Hu daniel mkdir -p /home/$(whoami)/music
-su -Hu daniel mkdir -p /home/$(whoami)/videos
-su -Hu daniel mkdir -p /home/$(whoami)/src
