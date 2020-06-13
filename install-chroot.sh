@@ -20,24 +20,23 @@ echo KEYMAP=de-latin1 > /etc/vconsole.conf
 echo FONT=lat9w-16 >> /etc/vconsole.conf
 
 # Configure locale
-echo LANG=de_DE.UTF-8 > /etc/locale.conf
-sed -i "s/#de_DE/de_DE/" /etc/locale.gen
-sed -i "s/#en_US/en_US/" /etc/locale.gen
+# echo LANG=de_DE.UTF-8 > /etc/locale.conf
+sed -i "s|#de_DE|de_DE|" /etc/locale.gen
+sed -i "s|#en_US|en_US|" /etc/locale.gen
 locale-gen
 
-localectl --no-ask-password set-locale de_DE.UTF-8
-localectl --no-ask-password set-x11-keymap de pc105 nodeadkeys
+localectl --no-ask-password --no-convert set-locale de_DE.UTF-8
 
 # Set the timezone
 ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # Install & configure sudo
 sudo pacman --noconfirm --needed -S sudo
-sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
+sed -i 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|' /etc/sudoers
 
 # Useful services
 systemctl enable fstrim.timer
-systemctl enable systemd-timesyncd.service
+systemctl enable systemd-timesyncd
 
 pacman --noconfirm --needed -S acpid
 systemctl enable acpid
@@ -46,10 +45,10 @@ pacman --noconfirm --needed -S avahi
 systemctl enable avahi-daemon
 
 pacman --noconfirm --needed -S cups
-systemctl enable org.cups.cupsd.service
+systemctl enable org.cups.cupsd
 
 pacman --noconfirm --needed -S networkmanager
-systemctl enable NetworkManager.service
+systemctl enable NetworkManager
 
 pacman --noconfirm --needed -S cronie
 systemctl enable cronie
@@ -62,20 +61,29 @@ systemctl enable sddm
 pacman --noconfirm --needed qt5-graphicaleffects qt5-quickcontrols2 qt5-svg git
 mkdir -p /usr/share/sddm/themes/sugar-candy
 git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/themes/sugar-candy
+curl https://raw.githubuserontent.com/ddeimling/arch-install/master/arch.jpg -o /user/share/sddm/themes/sugar-candy/Backgrounds/arch.jpg
 
+cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
+
+sed -i 's|Current=|Current=sugar-candy|' /etc/sddm.conf.d/sddm.conf
+sed -i 's|ScreenWidth=".*"|ScreenWidth="1920"|' /user/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|ScreenHeight=".*"|ScreenHeight="1080"|' /user/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|ForceLasUser=".*"|ForceLastUser="true"|' /user/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|ForcePasswordFocus=".*"|ForcePasswordFocus="true"|' /user/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|Background=".*"|Background="Backgrounds/arch.jpg"|' /user/share/sddm/themes/sugar-candy/theme.conf
 
 # Set the root default password ( CHANGE ROOT PASSWORD AFTER SYSTEM SETUP HAS FINISHED ! ! ! )
 echo -e "${ROOT_DEFAULT_PASSWORD}\n${ROOT_DEFAULT_PASSWORD}" | passwd root
 
-# Copy the salt
-git clone https://github.com/ddeimling/arch-install /tmp/arch-install
-cp -r /tmp/arch-install/salt/* /
-rm -rf /tmp/arch-install
-
+# Set special system configs
+sudo pacman --noconfirm --needed -S hdparm
+echo 'ACTION=="add|change", KERNEL=="sd[a-z]", ATTRS{queue/rotational}=="1", RUN+="/usr/bin/hdparm -S 36 /dev/%k"' > /usr/lib/udev/rules.d/69-hdparm.rules
 
 ### Finishing ###
 
-# Generate initramfs
+# Configure & generate initramfs
+echo "blacklist pcspkr" > /etc/modprobe.d/blacklist.conf
+sed -i 's|FILES=()|FILES=(/etc/modprobe.d/blacklist.conf)|' /etc/modprobe.d/blacklist.conf
 mkinitcpio -p linux
 
 # Install boot
@@ -105,3 +113,4 @@ userdel -r $ADMINISTRATOR_NAME
 # User specific configuration - needs to be extracted into something like install-user.sh
 useradd -m -G wheel,log,network,audio,video,games,power -s /bin/bash daniel
 sudo -Hu daniel dbus-launch gsettings set org.cinnamon.desktop.background picture-uri  "file:///usr/local/share/img/arch.jpg"
+#localectl --no-ask-password set-x11-keymap de pc105 nodeadkeys
