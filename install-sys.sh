@@ -25,7 +25,7 @@ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 grep -E -A 1 ".*Germany.*$" /etc/pacman.d/mirrorlist.bak | sed '/--/d' > /etc/pacman.d/mirrorlist
 
 # Install base system
-pacstrap /mnt base base-devel linux linux-firmware intel-ucode bash-completion nano neovim
+pacstrap /mnt base base-devel linux linux-firmware intel-ucode
 
 # Generate fstab with IDs
 genfstab -Up /mnt > /mnt/etc/fstab
