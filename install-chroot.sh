@@ -63,6 +63,7 @@ mkdir -p /usr/share/sddm/themes/sugar-candy
 git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/themes/sugar-candy
 curl https://raw.githubuserontent.com/ddeimling/arch-install/master/arch.jpg -o /user/share/sddm/themes/sugar-candy/Backgrounds/arch.jpg
 
+mkdir /etc/sddm.conf.d
 cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
 
 sed -i 's|Current=|Current=sugar-candy|' /etc/sddm.conf.d/sddm.conf
@@ -112,5 +113,7 @@ userdel -r $ADMINISTRATOR_NAME
 
 # User specific configuration - needs to be extracted into something like install-user.sh
 useradd -m -G wheel,log,network,audio,video,games,power -s /bin/bash daniel
-sudo -Hu daniel dbus-launch gsettings set org.cinnamon.desktop.background picture-uri  "file:///usr/local/share/img/arch.jpg"
-#localectl --no-ask-password set-x11-keymap de pc105 nodeadkeys
+mkdir -p /home/daniel/wallpaper
+curl https://raw.githubuserontent.com/ddeimling/arch-install/master/arch.jpg -o /home/daniel/wallpaper/arch.jpg
+sudo -Hu daniel dbus-launch gsettings set org.cinnamon.desktop.background picture-uri  "file:///home/daniel/wallpaper/arch.jpg"
+sudo -Hu daniel localectl --no-ask-password --no-convert set-x11-keymap de pc105 nodeadkeys
