@@ -67,6 +67,7 @@ mkdir /etc/sddm.conf.d
 cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
 
 sed -i 's|Current=|Current=sugar-candy|' /etc/sddm.conf.d/sddm.conf
+sed -i 's|FormPosition=".*"|FormPosition="center"|' /usr/share/sddm/themes/sugar-candy/theme.conf
 sed -i 's|ScreenWidth=".*"|ScreenWidth="1920"|' /usr/share/sddm/themes/sugar-candy/theme.conf
 sed -i 's|ScreenHeight=".*"|ScreenHeight="1080"|' /usr/share/sddm/themes/sugar-candy/theme.conf
 sed -i 's|ForceLasUser=".*"|ForceLastUser="true"|' /usr/share/sddm/themes/sugar-candy/theme.conf
@@ -93,7 +94,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch-Grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
 # Add special account for further installation, e. g. for yay (makepkg needs non-root user)
-sudo pacman --noconfirm --needed sudo
+sudo pacman --noconfirm --needed -S sudo
 useradd -m $ADMINISTRATOR_NAME
 echo -e "${ADMINISTRATOR_DEFAULT_PASSWORD}\n${ADMINISTRATOR_DEFAULT_PASSWORD}" | passwd $ADMINISTRATOR_NAME
 echo "%$ADMINISTRATOR_NAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -107,12 +108,9 @@ sudo -Hu $ADMINISTRATOR_NAME yay --noconfirm -S visual-studio-code-bin spotify
 sed -i "/%$ADMINISTRATOR_NAME ALL=(ALL) NOPASSWD: ALL/d" /etc/sudoers
 userdel -r $ADMINISTRATOR_NAME
 
-# TODO: Install yay then with yay install visual-studio-code-bin, spotify
-# curl https://raw.githubusercontent.com/ddeimling/arch-install/master/install-user.sh | installUser
-# sudo -Hu daniel bash $installUser
-
 # User specific configuration - needs to be extracted into something like install-user.sh
 useradd -m -G wheel,log,network,audio,video,games,power -s /bin/bash daniel
+echo -e "daniel\ndaniel" | passwd daniel
 mkdir -p /home/daniel/wallpaper
 curl https://raw.githubuserontent.com/ddeimling/arch-install/master/arch.jpg -o /home/daniel/wallpaper/arch.jpg
 sudo -Hu daniel dbus-launch gsettings set org.cinnamon.desktop.background picture-uri  "file:///home/daniel/wallpaper/arch.jpg"
