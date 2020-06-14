@@ -58,7 +58,7 @@ pacman --noconfirm --needed -S xorg-server xorg-xinit nvidia nvidia-utils sddm c
 systemctl enable sddm
 
 # Install sddm theme "sugar-candy"
-pacman --noconfirm --needed qt5-graphicaleffects qt5-quickcontrols2 qt5-svg git
+pacman --noconfirm --needed -S qt5-graphicaleffects qt5-quickcontrols2 qt5-svg git
 mkdir -p /usr/share/sddm/themes/sugar-candy
 git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/themes/sugar-candy
 curl https://raw.githubuserontent.com/ddeimling/arch-install/master/arch.jpg -o /user/share/sddm/themes/sugar-candy/Backgrounds/arch.jpg
