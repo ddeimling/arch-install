@@ -61,17 +61,17 @@ systemctl enable sddm
 pacman --noconfirm --needed -S qt5-graphicaleffects qt5-quickcontrols2 qt5-svg git
 mkdir -p /usr/share/sddm/themes/sugar-candy
 git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/themes/sugar-candy
-curl https://raw.githubusercontent.com/ddeimling/arch-install/master/arch.jpg -o /user/share/sddm/themes/sugar-candy/Backgrounds/arch.jpg
+curl https://raw.githubusercontent.com/ddeimling/arch-install/master/arch.jpg -o /usr/share/sddm/themes/sugar-candy/Backgrounds/arch.jpg
 
 mkdir /etc/sddm.conf.d
 cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
 
 sed -i 's|Current=|Current=sugar-candy|' /etc/sddm.conf.d/sddm.conf
-sed -i 's|ScreenWidth=".*"|ScreenWidth="1920"|' /user/share/sddm/themes/sugar-candy/theme.conf
-sed -i 's|ScreenHeight=".*"|ScreenHeight="1080"|' /user/share/sddm/themes/sugar-candy/theme.conf
-sed -i 's|ForceLasUser=".*"|ForceLastUser="true"|' /user/share/sddm/themes/sugar-candy/theme.conf
-sed -i 's|ForcePasswordFocus=".*"|ForcePasswordFocus="true"|' /user/share/sddm/themes/sugar-candy/theme.conf
-sed -i 's|Background=".*"|Background="Backgrounds/arch.jpg"|' /user/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|ScreenWidth=".*"|ScreenWidth="1920"|' /usr/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|ScreenHeight=".*"|ScreenHeight="1080"|' /usr/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|ForceLasUser=".*"|ForceLastUser="true"|' /usr/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|ForcePasswordFocus=".*"|ForcePasswordFocus="true"|' /usr/share/sddm/themes/sugar-candy/theme.conf
+sed -i 's|Background=".*"|Background="Backgrounds/arch.jpg"|' /usr/share/sddm/themes/sugar-candy/theme.conf
 
 # Set the root default password ( CHANGE ROOT PASSWORD AFTER SYSTEM SETUP HAS FINISHED ! ! ! )
 echo -e "${ROOT_DEFAULT_PASSWORD}\n${ROOT_DEFAULT_PASSWORD}" | passwd root
