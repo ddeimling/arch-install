@@ -61,7 +61,7 @@ systemctl enable sddm
 pacman --noconfirm --needed -S qt5-graphicaleffects qt5-quickcontrols2 qt5-svg git
 mkdir -p /usr/share/sddm/themes/sugar-candy
 git clone https://framagit.org/MarianArlt/sddm-sugar-candy.git /usr/share/sddm/themes/sugar-candy
-curl https://raw.githubuserontent.com/ddeimling/arch-install/master/arch.jpg -o /user/share/sddm/themes/sugar-candy/Backgrounds/arch.jpg
+curl https://raw.githubusercontent.com/ddeimling/arch-install/master/arch.jpg -o /user/share/sddm/themes/sugar-candy/Backgrounds/arch.jpg
 
 mkdir /etc/sddm.conf.d
 cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/sddm.conf
