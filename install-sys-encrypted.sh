@@ -8,13 +8,15 @@ sgdisk /dev/sda --zap-all
 sgdisk /dev/sda --new=1:0:+512M --typecode=1:ef00 --new=2:0:0 --typecode=2:8309
 
 # Read desired password for encryption
-read -s -p "Encryption password: " encryptionPassword
+#read -s -p "Encryption password: " encryptionPassword
 
 # Create LUKS encrypted container
-echo -e "${encryptionPassword}\n${encryptionPassword}" | cryptsetup luksFormat /dev/sda2
+#echo -e "${encryptionPassword}\n${encryptionPassword}" | cryptsetup luksFormat /dev/sda2
+cryptsetup luksFormat /dev/sda2
 
 # Open LUKS container
-echo $encryptionPassword | cryptsetup luksOpen /dev/sda2 cryptContainer
+#echo $encryptionPassword | cryptsetup luksOpen /dev/sda2 cryptContainer
+cryptsetup luksOpen /dev/sda2 cryptContainer
 
 # Create physical volume and volume group
 pvcreate /dev/mapper/cryptContainer
