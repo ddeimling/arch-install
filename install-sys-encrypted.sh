@@ -8,7 +8,7 @@ sgdisk /dev/sda --zap-all
 sgdisk /dev/sda --new=1:0:+512M --typecode=1:ef00 --new=2:0:0 --typecode=2:8309
 
 # Read desired password for encryption
-read -sp "Encryption password: " encryptionPassword
+read -s -p "Encryption password: " encryptionPassword
 
 # Create LUKS encrypted container
 echo -e "${encryptionPassword}\n${encryptionPassword}" | cryptsetup luksFormat /dev/sda2
