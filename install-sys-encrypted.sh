@@ -33,20 +33,20 @@ lvcreate vg_arch -l 100%FREE -n home
 
 # Format & mount volumes
 mkfs.vfat -F 32 /dev/sda1
-mkswap /dev/mapper/vg_arch/swap
-mkfs.ext4 /dev/mapper/vg_arch/root
-mkfs.ext4 /dev/mapper/vg_arch/home
+mkswap /dev/mapper/vg_arch-swap
+mkfs.ext4 /dev/mapper/vg_arch-root
+mkfs.ext4 /dev/mapper/vg_arch-home
 
-mount /dev/mapper/vg_arch/root /mnt
+mount /dev/mapper/vg_arch-root /mnt
 
 mkdir /mnt/boot
 mkdir /mnt/efi
 mount /dev/sda1 /mnt/efi
 
 mkdir /mnt/home
-mount /dev/mapper/vg_arch/home /mnt/home
+mount /dev/mapper/vg_arch-home /mnt/home
 
-swapon /dev/mapper/vg_arch/swap
+swapon /dev/mapper/vg_arch-swap
 
 # Prepare mirrorlist
 #cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
@@ -69,7 +69,7 @@ sed -i "s|#en_US|en_US|g" /mnt/etc/locale.gen
 arch-chroot /mnt locale-gen
 
 # Configure mkinitcpio
-sed -i 's|^HOOKS=\(.*\)|HOOKS=(base udev autodetect keyboard keymap consolefont modconf block encrypt lvm2 filesystems fsck)|' /mnt/etc/mkinitcpio.conf
+sed -i 's|^HOOKS=\(.*\)|HOOKS=(base autodetect modconf block lvm2 keyboard consolefont encrypt filesystems fsck)|' /mnt/etc/mkinitcpio.conf
 
 # Regenerate initramfs
 arch-chroot /mnt mkinitcpio -p linux
@@ -77,10 +77,10 @@ arch-chroot /mnt mkinitcpio -p linux
 # Configure grub
 sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|' /mnt/etc/default/grub
 uuid=$(blkid -s UUID -o value /dev/sda2)
-sed -i "s|GRUB_CMDLINE_LINUX=\"\"|GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$uuid\:pv_arch root=/dev/vg_arch/root\"|" /mnt/etc/default/grub
+sed -i "s|GRUB_CMDLINE_LINUX=\"\"|GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$uuid\:pv_arch root=/dev/mapper/vg_arch-root resume=/dev/mapper/vg_arch-swap\"|" /mnt/etc/default/grub
 
 # Install grub boot loader
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=Grub
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=ArchLinux
 
 # Generate grub configuration file
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
