@@ -70,7 +70,7 @@ sed -i "s|#en_US|en_US|g" /mnt/etc/locale.gen
 arch-chroot /mnt locale-gen
 
 # Configure mkinitcpio
-sed -i 's|^HOOKS=\(.*\)|HOOKS=(base autodetect modconf block keyboard keymap encrypt lvm2 resume filesystems fsck)|' /mnt/etc/mkinitcpio.conf
+sed -i 's|^HOOKS=\(.*\)|HOOKS=(base udev autodetect keyboard keymap consolefont modconf block encrypt lvm2 filesystems fsck)|' /mnt/etc/mkinitcpio.conf
 
 # Regenerate initramfs
 arch-chroot /mnt mkinitcpio -p linux
