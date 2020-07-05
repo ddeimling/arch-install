@@ -62,11 +62,12 @@ genfstab -Up /mnt > /mnt/etc/fstab
 # System localization
 echo Arch-LNB > /mnt/etc/hostname
 echo LANG=de_DE.UTF-8 > /mnt/etc/locale.conf
+echo LANGUAGE=de_DE >> /mnt/etc/locale.conf
 echo KEYMAP=de-latin1 > /mnt/etc/vconsole.conf
 echo FONT=lat9w-16 >> /mnt/etc/vconsole.conf
 ln -sf /mnt/usr/share/zoneinfo/Europe/Berlin /mnt/etc/localtime
-sed -i "s|#de_DE|de_DE|g" /mnt/etc/locale.gen
-sed -i "s|#en_US|en_US|g" /mnt/etc/locale.gen
+sed -i "s|#de_DE.UTF-8|de_DE.UTF-8|g" /mnt/etc/locale.gen
+#sed -i "s|#en_US|en_US|g" /mnt/etc/locale.gen
 arch-chroot /mnt locale-gen
 
 # Configure mkinitcpio
