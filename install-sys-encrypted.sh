@@ -12,11 +12,11 @@ sgdisk /dev/sda --new=1:0:+512M --typecode=1:ef00 --new=2:0:0 --typecode=2:8309
 
 # Create LUKS encrypted container (using --type luks1 until grub supports luks2)
 #echo -e "${encryptionPassword}\n${encryptionPassword}" | cryptsetup luksFormat /dev/sda2
-cryptsetup --type luks1 --cipher aes-xts-plain64 --key-size 512 --hash sha512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/sda2
+cryptsetup --type luks2 --cipher aes-xts-plain64 --key-size 512 --hash sha512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/sda2
 
 # Open LUKS container
 #echo $encryptionPassword | cryptsetup luksOpen /dev/sda2 pv_arch
-cryptsetup luksOpen /dev/sda2 pv_arch
+cryptsetup open /dev/sda2 pv_arch
 
 # Create physical volume and volume group
 pvcreate /dev/mapper/pv_arch
@@ -54,7 +54,7 @@ swapon /dev/mapper/vg_arch-swap
 #reflector --verbose --country 'Germany' --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # Base system installation
-pacstrap /mnt base base-devel linux linux-firmware intel-ucode lvm2 dhcpcd wpa_supplicant netctl dialog grub efibootmgr nano
+pacstrap /mnt base base-devel linux linux-firmware intel-ucode lvm2 dhcpcd wpa_supplicant netctl dialog  nano
 
 # Generate fstab
 genfstab -Up /mnt > /mnt/etc/fstab
@@ -71,18 +71,21 @@ sed -i "s|#de_DE.UTF-8|de_DE.UTF-8|g" /mnt/etc/locale.gen
 arch-chroot /mnt locale-gen
 
 # Configure mkinitcpio
-sed -i 's|^HOOKS=\(.*\)|HOOKS=(base udev autodetect keyboard keymap consolefont modconf block encrypt lvm2 filesystems fsck)|' /mnt/etc/mkinitcpio.conf
+sed -i 's|^HOOKS=\(.*\)|HOOKS=(systemd keyboard keymap sd-vconsole block sd-encrypt autodetect modconf lvm2 filesystems fsck)|' /mnt/etc/mkinitcpio.conf
 
 # Regenerate initramfs
 arch-chroot /mnt mkinitcpio -p linux
 
-# Configure grub
-sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|' /mnt/etc/default/grub
-uuid=$(blkid -s UUID -o value /dev/sda2)
-sed -i "s|GRUB_CMDLINE_LINUX=\"\"|GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$uuid\:pv_arch root=/dev/mapper/vg_arch-root resume=/dev/mapper/vg_arch-swap\"|" /mnt/etc/default/grub
+# Install systemd-boot
+bootctl --esp-path=/efi --boot-path=/boot install
 
-# Install grub boot loader
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=ArchLinux
+## Configure grub
+#sed -i 's|#GRUB_ENABLE_CRYPTODISK=y|GRUB_ENABLE_CRYPTODISK=y|' /mnt/etc/default/grub
+#uuid=$(blkid -s UUID -o value /dev/sda2)
+#sed -i "s|GRUB_CMDLINE_LINUX=\"\"|GRUB_CMDLINE_LINUX=\"cryptdevice=UUID=$uuid\:pv_arch root=/dev/mapper/vg_arch-root resume=/dev/mapper/vg_arch-swap\"|" /mnt/etc/default/grub
 
-# Generate grub configuration file
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+## Install grub boot loader
+#arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=ArchLinux
+
+## Generate grub configuration file
+#arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
