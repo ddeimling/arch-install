@@ -28,6 +28,7 @@ pacman --noconfirm --needed -S virtualbox-guest-utils sudo grub efibootmgr nano 
 sed -i 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|' /etc/sudoers
 
 # Enable services
+systemctl enable vboxservice
 systemctl enable acpid
 systemctl enable avahi-daemon
 systemctl enable org.cups.cupsd
