@@ -25,7 +25,6 @@ ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 pacman --noconfirm --needed -S virtualbox-guest-utils sudo grub efibootmgr nano vim dhcpcd bash-completion acpid avahi cups networkmanager cronie xorg-server xorg-xinit gnome gnome-tweaks gdm firefox terminator
 
 # Enable 'sudo' for group 'wheel'
-pacman --noconfirm --needed -S sudo
 sed -i 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|' /etc/sudoers
 
 # Enable services
@@ -47,7 +46,8 @@ echo -e "${rootPassword}\n${rootPassword}" | passwd root
 mkinitcpio -p linux
 
 # Setup GRUB
-pacman --noconfirm --needed -S grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Grub
 grub-mkconfig -o /boot/grub/grub.cfg
+
+#Exit chroot
 
