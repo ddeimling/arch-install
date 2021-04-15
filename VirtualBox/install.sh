@@ -40,7 +40,7 @@ arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # Set 'sudo'
 arch-chroot /mnt pacman --noconfirm --needed -S sudo
-sed -i 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|' /etc/sudoers
+sed -i 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|' /mnt/etc/sudoers
 
 # Useful services
 arch-chroot /mnt pacman --noconfirm --needed -S acpid
@@ -75,4 +75,15 @@ arch-chroot /mnt echo -e "root\nroot" | passwd root
 
 # Add user
 arch-chroot /mnt useradd -m -g users -s /bin/bash daniel
+arch-chroot /mnt gpasswd -a daniel wheel
+arch-chroot /mnt gpasswd -a daniel audio
+arch-chroot /mnt gpasswd -a daniel video
+arch-chroot /mnt gpasswd -a daniel games
+arch-chroot /mnt gpasswd -a daniel power
 arch-chroot /mnt echo -e "daniel\ndaniel" | passwd daniel
+
+## Cleanup & have fun :D
+swapoff /dev/sda2
+umount /dev/sda1
+umount /dev/sda3
+reboot
