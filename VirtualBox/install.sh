@@ -27,10 +27,12 @@ pacstrap /mnt base base-devel linux linux-firmware
 # Generate fstab with IDs
 genfstab -Up /mnt > /mnt/etc/fstab
 
-curl https://raw.githubusercontent.com/ddeimling/arch-install/master/VirtualBox/chroot.sh | bash
+curl https://raw.githubusercontent.com/ddeimling/arch-install/master/VirtualBox/chroot.sh > /mnt/chroot.sh
+arch-chroot /mnt bash chroot.sh
+rm /mnt/chroot.sh
 
 # Cleanup & have fun
-swapoff /dev/sda2
-umount /dev/sda1
-umount /dev/sda3
-reboot
+# swapoff /dev/sda2
+# umount /dev/sda1
+# umount /dev/sda3
+# reboot
