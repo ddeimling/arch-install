@@ -67,9 +67,6 @@ arch-chroot /mnt pacman --noconfirm --needed -S grub efibootmgr
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Grub
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
-# Change root passwd
-arch-chroot /mnt echo -e "root\nroot" | passwd root
-
 # Add user
 arch-chroot /mnt useradd -m -g users -s /bin/bash daniel
 arch-chroot /mnt gpasswd -a daniel wheel
@@ -79,8 +76,11 @@ arch-chroot /mnt gpasswd -a daniel games
 arch-chroot /mnt gpasswd -a daniel power
 arch-chroot /mnt echo -e "daniel\ndaniel" | passwd daniel
 
+# Change root passwd
+arch-chroot /mnt echo -e "root\nroot" | passwd root
+
 ## Cleanup & have fun :D
-swapoff /dev/sda2
-umount /dev/sda1
-umount /dev/sda3
-reboot
+# swapoff /dev/sda2
+# umount /dev/sda1
+# umount /dev/sda3
+# reboot
