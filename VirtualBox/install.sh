@@ -32,7 +32,7 @@ arch-chroot /mnt bash chroot.sh
 rm /mnt/chroot.sh
 
 # Cleanup & have fun
-# swapoff /dev/sda2
-# umount /dev/sda1
-# umount /dev/sda3
-# reboot
+swapoff /dev/sda2
+umount /dev/sda1
+umount /dev/sda3
+reboot
