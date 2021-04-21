@@ -34,7 +34,7 @@ systemctl enable avahi-daemon
 systemctl enable org.cups.cupsd
 systemctl enable NetworkManager
 systemctl enable cronie
-systemctl enable gdm
+systemctl enable sddm
 
 # Generate initramfs
 mkinitcpio -p linux
