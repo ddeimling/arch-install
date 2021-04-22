@@ -1,7 +1,9 @@
 #!/bin/bash
 
+rootPassword=root
+
 # Install needed tools, software & services
-pacman --noconfirm --needed -S virtualbox-guest-utils sudo grub efibootmgr nano vim dhcpcd bash-completion acpid avahi cronie xorg-server xorg-xinit sddm dtkwm i3 dmenu awesome herbstluftwm xterm
+pacman --noconfirm --needed -S virtualbox-guest-utils sudo grub efibootmgr nano vim dhcpcd bash-completion acpid avahi cronie xorg-server xorg-xinit sddm plasma dtkwm i3 dmenu awesome herbstluftwm xterm
 
 # Set hostname
 echo Arch-Desktop-VM > /etc/hostname
@@ -23,6 +25,14 @@ ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 # Enable 'sudo' for group 'wheel'
 sed -i 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|' /etc/sudoers
 
+# Set root passwd
+echo -e "${rootPassword}\n${rootPassword}" | passwd
+
+# Add user
+read -p "Username: " userName
+useradd -m -G users,wheel,audio,video,games,power -s /bin/bash $userName
+echo -e "${userName}\n${userName}" | passwd $userName
+
 # Enable services
 systemctl enable vboxservice
 systemctl enable dhcpcd
@@ -37,20 +47,4 @@ mkinitcpio -p linux
 # Setup GRUB
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Grub
 grub-mkconfig -o /boot/grub/grub.cfg
-
-# Set root passwd
-#read -sp "Root password: " rootPassword
-#echo -e "${rootPassword}\n${rootPassword}" | passwd root
-passwd
-
-# Add user
-read -p "Username: " userName
-useradd -m -G users,wheel,audio,video,games,power -s /bin/bash $userName
-passwd $userName
-#read -sp "User password: " userPassword
-#echo -e "${userPassword}\n${userPassword}" | passwd $userName
-
-# Configure X11 keyboard layout
-#localectl set-x11-keymap de pc105 deadgraveacute
-sudo -Hu $userName localectl --no-ask-password --no-convert set-x11-keymap de pc105 deadgraveacute
 
