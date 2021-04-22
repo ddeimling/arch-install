@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install needed tools, software & services
-pacman --noconfirm --needed -S virtualbox-guest-utils sudo grub efibootmgr nano vim dhcpcd bash-completion acpid avahi cups cronie xorg-server xorg-xinit sddm dtkwm i3 dmenu awesome herbstluftwm xterm
+pacman --noconfirm --needed -S virtualbox-guest-utils sudo grub efibootmgr nano vim dhcpcd bash-completion acpid avahi cronie xorg-server xorg-xinit sddm dtkwm i3 dmenu awesome herbstluftwm xterm
 
 # Set hostname
 echo Arch-Desktop-VM > /etc/hostname
@@ -28,8 +28,6 @@ systemctl enable vboxservice
 systemctl enable dhcpcd
 systemctl enable acpid
 systemctl enable avahi-daemon
-systemctl enable org.cups.cupsd
-systemctl enable NetworkManager
 systemctl enable cronie
 systemctl enable sddm
 
