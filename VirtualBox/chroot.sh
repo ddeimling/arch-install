@@ -3,7 +3,7 @@
 rootPassword=root
 
 # Install needed tools, software & services
-pacman --noconfirm --needed -S virtualbox-guest-utils sudo grub efibootmgr nano vim dhcpcd bash-completion acpid avahi cronie xorg-server xorg-xinit sddm plasma dtkwm i3 dmenu awesome herbstluftwm xterm
+pacman --noconfirm --needed -S virtualbox-guest-utils sudo grub efibootmgr nano vim dhcpcd bash-completion acpid avahi cronie xorg-server xorg-xinit sddm dtkwm i3 dmenu awesome herbstluftwm xterm
 
 # Set hostname
 echo Arch-Desktop-VM > /etc/hostname
